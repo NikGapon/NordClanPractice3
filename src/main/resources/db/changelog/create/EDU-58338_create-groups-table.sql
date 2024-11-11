@@ -1,0 +1,8 @@
+CREATE SEQUENCE IF NOT EXISTS groups_seq START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE IF NOT EXISTS groups
+(
+    id BIGINT DEFAULT nextval('groups_seq') NOT NULL,
+    name VARCHAR(200),
+    CONSTRAINT groups_pk PRIMARY KEY (id)
+);

@@ -1,0 +1,1 @@
+ALTER TABLE training ADD COLUMN IF NOT EXISTS exam_result INTEGER;

@@ -1,0 +1,1 @@
+DELETE from roles where id = 3;

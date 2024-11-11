@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: "2"
+      author: "ma"
+      changes:
+        - sqlFile:
+            path: "db/changelog/update/EDU-69669_add-exam_result-to-training.sql"
