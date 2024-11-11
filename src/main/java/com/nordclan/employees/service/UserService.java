@@ -178,7 +178,7 @@ public class UserService extends DefaultService<UUID, User, UserDto> {
         }
     }
 
-    public Pair<String, Map<Triple<String, UUID, Integer>, String>> topHousemotherTemplate(Long templateId) {
+    public Pair<String, Map<Triple<String, UUID, Integer>, String>> topUsersoftheTemplate(Long templateId) {
         List<String> NeutralResponse = List.of("Не достиг высот но был душой компании", "Опоздал на вечеринку", "Хороший человек", "Хорош во всем", "Молодец");
         List<String> GoodResponse = List.of("Легенда по", "Эксперт в вопросе", "Великолепен по", "Даже не почувствовал");
         HashMap<Triple<String, UUID, Integer>, String> topList = new HashMap<>();

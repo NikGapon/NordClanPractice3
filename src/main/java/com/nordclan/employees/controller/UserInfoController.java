@@ -49,7 +49,7 @@ public class UserInfoController {
     @ApiResponse(responseCode = "200", description = "Успешная операция", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Pair.class)))
     @ApiResponse(responseCode = "404", description = "Вопрос не найден", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)))
     public Pair<String, Map<Triple<String, UUID, Integer>, String>> topUsersoftheTemplate(@Parameter(description = "ID шаблона") @PathVariable Long templateId) throws UserNotFoundException {
-        return userService.topHousemotherTemplate(templateId);
+        return userService.topUsersoftheTemplate(templateId);
     }
 
 
