@@ -283,4 +283,23 @@ public class UserService extends DefaultService<UUID, User, UserDto> {
         }
         return Pair.of(templateService.findById(templateId).getName(), topList.values().stream().toList());
     }
+    public Pair<SimpleUserDto, String> Compare2UsersOnSpecificQuestion(UUID user1Id, UUID user2Id, Long templateId, Long questionId){
+        SimpleUserDto simpleUser1 = this.getSimpleUserDtoById(user1Id);
+        SimpleUserDto simpleUser2 = this.getSimpleUserDtoById(user2Id);
+        Long trainingIdUser1 = trainingService.findAllByExample(TrainingDto.builder().student(simpleUser1).templateId(templateId).build()).get(0).getId();
+        Long trainingIdUser2 = trainingService.findAllByExample(TrainingDto.builder().student(simpleUser2).templateId(templateId).build()).get(0).getId();
+
+        int resultUser1 = assessmentService.getAllResultByTraining(trainingIdUser1).stream().filter(x -> x.getQuestionId() == questionId).toList().get(0).getPoint();
+        int resultUser2 = assessmentService.getAllResultByTraining(trainingIdUser2).stream().filter(x -> x.getQuestionId() == questionId).toList().get(0).getPoint();
+
+        if (resultUser1 > resultUser2){
+            return Pair.of(simpleUser1, "По этому вопросу " + simpleUser1.getFirstName() + " лучше чем " + simpleUser2.getFirstName() + " на " + Integer.toString(resultUser1 - resultUser2) + "балл(а)" );
+        }
+        else if (resultUser1 < resultUser2){
+            return Pair.of(simpleUser2, "По этому вопросу " + simpleUser2.getFirstName() + " лучше чем " + simpleUser1.getFirstName() + " на " + Integer.toString(- resultUser1 + resultUser2) + " балл(а)" );
+        }
+        return Pair.of(new SimpleUserDto(), "Они получили одинаковое кол-во баллов");
+
+    }
+
 }

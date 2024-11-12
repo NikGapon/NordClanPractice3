@@ -60,5 +60,12 @@ public class UserInfoController {
     public Pair<String, List<UserforRudeTopDto>> rudeTopUsersoftheTemplate(@Parameter(description = "ID шаблона") @PathVariable Long templateId) throws UserNotFoundException {
         return userService.rudeTopUsersoftheTemplate(templateId);
     }
+    @GetMapping("/honestCompareOnSpecificQuestion/")
+    @Operation(summary = "Получить сравнение двух пользователей по вопросу", description = "Получить сравнение двух пользователей по конкретному вопросу в шаблоне", security = @SecurityRequirement(name = "accessToken"))
+    @ApiResponse(responseCode = "200", description = "Успешная операция", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Pair.class)))
+    @ApiResponse(responseCode = "404", description = "Вопрос не найден", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)))
+    public Pair<SimpleUserDto, String> Compare2UsersOnSpecificQuestion(@Parameter(description = "ID запрашиваемых юзеров") UUID user1Id, @Parameter(description = "ID запрашиваемых юзеров") UUID user2Id, @Parameter Long templateId, @Parameter Long questionId) throws UserNotFoundException {
+        return userService.Compare2UsersOnSpecificQuestion(user1Id, user2Id, templateId, questionId);
+    }
 
 }
