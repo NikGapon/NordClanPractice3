@@ -234,4 +234,53 @@ public class UserService extends DefaultService<UUID, User, UserDto> {
             }}
         return Pair.of(templateService.findById(templateId).getName(), topList);
     }
+    public Pair<String, List<UserforRudeTopDto>> rudeTopUsersoftheTemplate(Long templateId){
+        List<TrainingDto> trainingDtos = trainingService.findAllByExample(TrainingDto.builder().templateId(templateId).build());
+        List<QuestionResultDtoFull> topofQuestion = new ArrayList<>();
+        HashMap<Long, UserforRudeTopDto> topList = new HashMap<>();
+
+        trainingDtos.stream()
+                .sorted(Comparator.comparing(TrainingDto::getExamResult))
+                .limit(10)
+                .forEach(x -> {
+                    topofQuestion.addAll(assessmentService.getAllResultByTraining(x.getId()));
+                    topList.put(x.getId(), new UserforRudeTopDto(
+                            x.getStudent().getFirstName() + " " + x.getStudent().getLastName(),
+                            x.getStudent().getId(),
+                            x.getExamResult(),
+                            ""
+                    ));
+                });
+
+
+        Map<Long, List<QuestionResultDtoFull>> groupedByQuestionId = topofQuestion.stream()//.filter(x -> x.getPoint() > 1)
+                .collect(Collectors.groupingBy(QuestionResultDtoFull::getQuestionId));
+        List<QuestionResultDtoFull> questionResult;
+        StringBuilder UsersWithPointOne;
+        StringBuilder UsersWithPointTwo;
+        for(Map.Entry<Long, List<QuestionResultDtoFull>> entry : groupedByQuestionId.entrySet()){
+            questionResult = entry.getValue();
+            UsersWithPointOne = new StringBuilder();
+            UsersWithPointTwo = new StringBuilder();
+            for (QuestionResultDtoFull x : questionResult) {
+                if (x.getPoint() == 1)
+                    UsersWithPointOne.append(topList.get(x.getTrainingId()).getFIO()).append(", ");
+                else if(x.getPoint() == 2){;
+                    UsersWithPointTwo.append(topList.get(x.getTrainingId()).getFIO()).append(", ");
+                }
+            }
+            for(QuestionResultDtoFull x : questionResult) {
+                if (x.getPoint() == 3) {
+                    UserforRudeTopDto userforRudeTopDtoTempforBetterThan = topList.get(x.getTrainingId());
+                    userforRudeTopDtoTempforBetterThan.setBetterThan(userforRudeTopDtoTempforBetterThan.getBetterThan() +"По вопросу " + questionService.findById(entry.getKey()).getQuestion() + " Лучше чем:" + UsersWithPointOne + UsersWithPointTwo);
+                }else {
+                    if (x.getPoint() == 2) {
+                        UserforRudeTopDto userforRudeTopDtoTempforBetterThan = topList.get(x.getTrainingId());
+                        topList.get(x.getTrainingId()).setBetterThan(userforRudeTopDtoTempforBetterThan.getBetterThan() +"По вопросу " + questionService.findById(entry.getKey()).getQuestion() + " Лучше чем:" + UsersWithPointOne);
+                    }
+                }
+            }
+        }
+        return Pair.of(templateService.findById(templateId).getName(), topList.values().stream().toList());
+    }
 }

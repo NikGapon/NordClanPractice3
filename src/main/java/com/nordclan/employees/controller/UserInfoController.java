@@ -18,6 +18,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,5 +53,12 @@ public class UserInfoController {
         return userService.topUsersoftheTemplate(templateId);
     }
 
+    @GetMapping("/rudetopofthetemplate/{templateId}")
+    @Operation(summary = "Получить жестокий топ по шаблону", description = "Получить топ людей прошедших этот шаблон", security = @SecurityRequirement(name = "accessToken"))
+    @ApiResponse(responseCode = "200", description = "Успешная операция", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Pair.class)))
+    @ApiResponse(responseCode = "404", description = "Вопрос не найден", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)))
+    public Pair<String, List<UserforRudeTopDto>> rudeTopUsersoftheTemplate(@Parameter(description = "ID шаблона") @PathVariable Long templateId) throws UserNotFoundException {
+        return userService.rudeTopUsersoftheTemplate(templateId);
+    }
 
 }
