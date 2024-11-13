@@ -293,11 +293,9 @@ public class UserService extends DefaultService<UUID, User, UserDto> {
         int resultUser1 = assessmentService.getAllResultByTraining(trainingIdUser1).stream().filter(x -> x.getQuestionId() == questionId).toList().get(0).getPoint();
         int resultUser2 = assessmentService.getAllResultByTraining(trainingIdUser2).stream().filter(x -> x.getQuestionId() == questionId).toList().get(0).getPoint();
 
-        if (resultUser1 > resultUser2){
-            return Pair.of(simpleUser1, "По этому вопросу " + simpleUser1.getFirstName() + " лучше чем " + simpleUser2.getFirstName() + " на " + Integer.toString(resultUser1 - resultUser2) + "балл(а)" );
-        }
-        else if (resultUser1 < resultUser2){
-            return Pair.of(simpleUser2, "По этому вопросу " + simpleUser2.getFirstName() + " лучше чем " + simpleUser1.getFirstName() + " на " + Integer.toString(- resultUser1 + resultUser2) + " балл(а)" );
+        if (resultUser1 != resultUser2) {
+            return resultUser1 > resultUser2 ? Pair.of(simpleUser1, "По этому вопросу " + simpleUser1.getFirstName() + " лучше чем " + simpleUser2.getFirstName() + " на " + Integer.toString(resultUser1 - resultUser2) + "балл(а)")
+                    : Pair.of(simpleUser2, "По этому вопросу " + simpleUser2.getFirstName() + " лучше чем " + simpleUser1.getFirstName() + " на " + Integer.toString(-resultUser1 + resultUser2) + " балл(а)");
         }
         return Pair.of(new SimpleUserDto(), "Они получили одинаковое кол-во баллов");
 
