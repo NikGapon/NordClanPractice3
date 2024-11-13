@@ -270,14 +270,15 @@ public class UserService extends DefaultService<UUID, User, UserDto> {
                 }
             }
             for(QuestionResultDtoFull x : questionResult) {
-                if (x.getPoint() == 3) {
+                if (x.getPoint() >= 2) {
                     UserforRudeTopDto userforRudeTopDtoTempforBetterThan = topList.get(x.getTrainingId());
-                    userforRudeTopDtoTempforBetterThan.setBetterThan(userforRudeTopDtoTempforBetterThan.getBetterThan() +"По вопросу " + questionService.findById(entry.getKey()).getQuestion() + " Лучше чем:" + UsersWithPointOne + UsersWithPointTwo);
-                }else {
-                    if (x.getPoint() == 2) {
-                        UserforRudeTopDto userforRudeTopDtoTempforBetterThan = topList.get(x.getTrainingId());
-                        topList.get(x.getTrainingId()).setBetterThan(userforRudeTopDtoTempforBetterThan.getBetterThan() +"По вопросу " + questionService.findById(entry.getKey()).getQuestion() + " Лучше чем:" + UsersWithPointOne);
-                    }
+                    String betterText = userforRudeTopDtoTempforBetterThan.getBetterThan() +
+                            "По вопросу " + questionService.findById(entry.getKey()).getQuestion() +
+                            " Лучше чем:" + UsersWithPointOne;
+
+                    if (x.getPoint() == 3) betterText += UsersWithPointTwo;
+
+                    userforRudeTopDtoTempforBetterThan.setBetterThan(betterText);
                 }
             }
         }
